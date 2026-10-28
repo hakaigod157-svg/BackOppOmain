@@ -1,0 +1,59 @@
+use ERPO;
+
+CREATE TABLE KGroupe(
+	KGCODE char(8) NOT NULL,
+	KGLIB varchar(64) NOT NULL,
+	KGUSERCRE int NULL,
+	KGDATECRE smalldatetime NULL,
+	KGUSERMDF int NULL,
+	KGDATEMDF smalldatetime NULL,
+	PRIMARY KEY (KGCODE)
+);
+CREATE UNIQUE INDEX KGroupe_KGCODE ON KGroupe(KGCODE);
+CREATE UNIQUE INDEX KGroupe_KGLIB ON KGroupe(KGLIB);
+GRANT SELECT ON KGroupe TO public;
+
+CREATE TABLE KGroupeL(
+	KGLSEQ numeric identity NOT NULL,
+	KGLGROUPE char(8) NOT NULL,
+	KGLUSER varchar(30) NOT NULL,
+	KGLUSERCRE int NULL,
+	KGLDATECRE smalldatetime NULL,
+	KGLUSERMDF int NULL,
+	KGLDATEMDF smalldatetime NULL,
+	PRIMARY KEY(KGLSEQ)
+);
+CREATE UNIQUE INDEX KGroupeL_SEQ ON KGroupeL(KGLSEQ);
+CREATE UNIQUE INDEX KGroupeL_GROUPE_SEQ ON KGroupeL(KGLGROUPE,KGLUSER);
+GRANT SELECT ON KGroupeL TO public;
+
+CREATE TABLE KDroit(
+	KDSEQ numeric identity NOT NULL,
+	KDGROUPE char(8) NOT NULL,
+	KDAPP varchar(64) NOT NULL,
+	KDNOM varchar(255) NOT NULL,
+	KDREAD tinyint NOT NULL,
+	KDWRITE tinyint NOT NULL,
+	KDUSERCRE int NULL,
+	KDDATECRE smalldatetime NULL,
+	KDUSERMDF int NULL,
+	KDDATEMDF smalldatetime NULL,
+	PRIMARY KEY(KDSEQ)
+);
+CREATE UNIQUE INDEX KDroit_SEQ ON KDroit(KDSEQ);
+CREATE UNIQUE INDEX KDroit_GROUPE_APP_NOM ON KDroit(KDGROUPE,KDAPP,KDNOM);
+GRANT SELECT ON KDroit TO public;
+
+create view VIEW_DROIT as
+select
+    KGLUSER as USR,
+    KDAPP as APP,
+    KDNOM as DROIT,
+    case when sum(KDREAD)<>0 then 1 else 0 end as R,
+    case when sum(KDWRITE)<>0 then 1 else 0 end as W
+from KDroit
+left join KGroupeL on KDGROUPE=KGLGROUPE
+left join KGroupe on KGCODE=KGLGROUPE
+group by KGLUSER,KDAPP,KDNOM;
+
+GRANT SELECT ON VIEW_DROIT TO public;

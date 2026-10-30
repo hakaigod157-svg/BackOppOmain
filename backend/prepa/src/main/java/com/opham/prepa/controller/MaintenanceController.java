@@ -304,6 +304,18 @@ public class MaintenanceController {
         return ResponseEntity.ok(Collections.singletonMap("success", true));
     }
 
+    /**
+     * Méthode lié au bouton "AJOUTER REALISATION "
+     * @param sessionId
+     * @param maintCode
+     * @param intervReal
+     * @param datePrevu
+     * @param action
+     * @param fnr
+     * @param prix
+     * @param marque
+     * @return
+     */
     @PostMapping("/addEtapeReal")
     public ResponseEntity<?> addEtapeReal(
             @RequestHeader("Authorization") String sessionId,
@@ -317,6 +329,47 @@ public class MaintenanceController {
         mtnceRepo.addEtapeReal(sessionId, maintCode, intervReal, datePrevu, action, fnr, prix, marque);
         return ResponseEntity.ok(Collections.singletonMap("success", true));
     }
+
+    /**
+     *
+     * @param sessionId
+     * @return
+     */
+    @GetMapping("/getActions")
+    public ResponseEntity<List<Enumerat>> getActions(@RequestHeader("Authorization") String sessionId){
+        List<Enumerat> action = mtnceRepo.getTypeAction(sessionId);
+        if(action.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(action, HttpStatus.OK);
+    }
+
+    /**
+     *
+     * @param sessionId
+     * @return
+     */
+    @GetMapping("/getMarque")
+    public ResponseEntity<List<Enumerat>> getMarquePiece(@RequestHeader("Authorization") String sessionId){
+        List<Enumerat> marquePiece = mtnceRepo.getMarquePiece(sessionId);
+        if(marquePiece.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(marquePiece, HttpStatus.OK);
+    }
+
+    @GetMapping("/getFnr")
+    public ResponseEntity<List<Enumerat>> getFournisseurs(@RequestHeader("Authorization") String sessionId){
+        List<Enumerat> fournisseurs = mtnceRepo.getFournisseurs(sessionId);
+        if(fournisseurs.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(fournisseurs, HttpStatus.OK);
+    }
+
+
+
+
 }
 
 

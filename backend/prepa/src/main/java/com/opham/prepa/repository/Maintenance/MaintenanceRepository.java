@@ -87,5 +87,11 @@ public interface MaintenanceRepository {
     void addEtapeReal(String sessionId, String maintCode, String intervReal,
                       String datePrevu, String action, String fnr, Double prix, String marque);
 
+    List<Enumerat> getTypeAction(String sessionId);
+
+    List<Enumerat> getFournisseurs(String sessionId);
+
+    List<Enumerat> getMarquePiece(String sessionId);
+
     /** DemandeMaint getDmdbyCode(String sessionId,String demandeCode); */
 }

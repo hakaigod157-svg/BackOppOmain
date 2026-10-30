@@ -394,4 +394,30 @@ public class MaintenanceService implements MaintenanceRepository {
     }
 
 
+    @Override
+    public List<Enumerat> getTypeAction(String sessionId){
+        JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
+        String sql = "{call MAINT_OPHAM..x_ListeTypeAction()}";
+        return jdb.query(sql,new EnumeratMapper());
+
+    }
+
+    @Override
+    public List<Enumerat> getFournisseurs(String sessionId){
+        JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
+        String sql = "{call MAINT_OPHAM..x_ListeFournisseurs()}";
+        return jdb.query(sql,new EnumeratMapper());
+    }
+    @Override
+    public List<Enumerat> getMarquePiece(String sessionId) {
+        JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
+        String sql = "{call MAINT_OPHAM..x_ListeMarquePiece()}";
+        return jdb.query(sql,new EnumeratMapper());
+    }
+/**
+ * 
+ */
+
+
+
     }

@@ -30,6 +30,8 @@ public class DemandeMaint implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Timestamp DEMANDE_DATE_MODIF;
     private int DEMANDE_USER_MODIF;
+    private String DEMANDE_REFUS;
+    private String DEMANDE_REFUS_DESCR;
 
 
 

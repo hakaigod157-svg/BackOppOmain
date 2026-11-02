@@ -23,6 +23,9 @@ public class DemandeMaintenanceMapper implements RowMapper<DemandeMaint> {
         DEMANDE.setDEMANDE_USER_MODIF(rs.getInt("DEMANDE_USER_MODIF"));
         DEMANDE.setDEMANDE_DATE_CRE(rs.getTimestamp("DEMANDE_DATE_CRE"));
         DEMANDE.setDEMANDE_DATE_MODIF(rs.getTimestamp("DEMANDE_DATE_MODIF"));
+        DEMANDE.setDEMANDE_REFUS(rs.getString("DEMANDE_REFUS"));
+        DEMANDE.setDEMANDE_REFUS_DESCR(rs.getString("DEMANDE_REFUS_DESCR"));
+
         return DEMANDE;
     }
 }

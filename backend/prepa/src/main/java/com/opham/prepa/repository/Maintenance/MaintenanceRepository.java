@@ -44,7 +44,17 @@ public interface MaintenanceRepository {
             String demandeDescr
     );
 
-    void refuserDemande(String sessionId, String demandeCode);
+    //void refuserDemande(String sessionId, String demandeCode);
+
+    /*
+    @Override
+        public void refuserDemande(String sessionId, String demandeCode) {
+        JdbcTemplate jdbcTemplate = userSessionManager.getUserJdbcTemplate(sessionId);
+        String sql = "{call MAINT_OPHAM..x_UpdateDemande (3, ?)}";
+        jdbcTemplate.update(sql, demandeCode);
+    }
+*/
+    void refuserDemande(String sessionId, String demandeCode, String typeRefus, String descRefus);
 
     void supprDmd(String sessionId, String demandeCode);
 
@@ -92,6 +102,8 @@ public interface MaintenanceRepository {
     List<Enumerat> getFournisseurs(String sessionId);
 
     List<Enumerat> getMarquePiece(String sessionId);
+
+    List<Enumerat> getTypeRefus(String sessionId);
 
     /** DemandeMaint getDmdbyCode(String sessionId,String demandeCode); */
 }

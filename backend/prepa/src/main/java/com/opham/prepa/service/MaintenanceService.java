@@ -31,11 +31,11 @@ public class MaintenanceService implements MaintenanceRepository {
 
     @Override
     public List<DemandeMaint> getDemandeMaintenance(String sessionId) {
-          //  String codeDemande
+
         JdbcTemplate jdbcTemplate =
                 userSessionManager.getUserJdbcTemplate(sessionId);
 
-        String sql ="call MAINT_OPHAM..x_ListeDemandes} ";
+        String sql ="{call MAINT_OPHAM..x_ListDemandes} ";
 
         System.out.println(sql);
         return jdbcTemplate.query(
@@ -207,10 +207,18 @@ public class MaintenanceService implements MaintenanceRepository {
         );
     }
 
+    /*
     @Override
-    public void refuserDemande(String sessionId, String demandeCode) {
+        public void refuserDemande(String sessionId, String demandeCode) {
         JdbcTemplate jdbcTemplate = userSessionManager.getUserJdbcTemplate(sessionId);
         String sql = "{call MAINT_OPHAM..x_UpdateDemande (3, ?)}";
+        jdbcTemplate.update(sql, demandeCode);
+    }
+*/
+    @Override
+    public void refuserDemande(String sessionId, String demandeCode, String typeRefus, String descRefus) {
+        JdbcTemplate jdbcTemplate = userSessionManager.getUserJdbcTemplate(sessionId);
+        String sql = "{call MAINT_OPHAM..x_RefuserDemande (?, ?,?)}";
         jdbcTemplate.update(sql, demandeCode);
     }
 
@@ -316,8 +324,8 @@ public class MaintenanceService implements MaintenanceRepository {
         String sql = "{call MAINT_OPHAM..x_CloturerDemande(?)}";
         jdbcTemplate.update(sql, demandeCode);
     }
-
-   /** @Override
+/**
+   @Override
     public String getLastEtape(String sessionId, String demandeCode){
         JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
         String sql="{call MAINT_OPHAM..x_GetDemandeEtat(?)}";
@@ -413,6 +421,15 @@ public class MaintenanceService implements MaintenanceRepository {
         JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
         String sql = "{call MAINT_OPHAM..x_ListeMarquePiece()}";
         return jdb.query(sql,new EnumeratMapper());
+    }
+
+
+    @Override
+    public List<Enumerat> getTypeRefus(String sessionId){
+        JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
+        String sql = "{call MAINT_OPHAM..x_ListeTypeRefus()}";
+        return jdb.query(sql,new EnumeratMapper());
+
     }
 /**
  * 

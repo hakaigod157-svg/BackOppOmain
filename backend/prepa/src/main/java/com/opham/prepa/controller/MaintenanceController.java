@@ -91,9 +91,11 @@ public class MaintenanceController {
 @PostMapping("/refuser")
     public ResponseEntity<Void> refuserDemande(
             @RequestHeader("Authorization") String sessionId,
-            @RequestParam String demandeCode
+            @RequestParam String demandeCode,
+            @RequestParam String typeRefus,
+            @RequestParam String descRefus
     ) {
-        maintenanceService.refuserDemande(sessionId, demandeCode);
+        maintenanceService.refuserDemande(sessionId, demandeCode , typeRefus , descRefus);
         return ResponseEntity.ok().build();
     }
 
@@ -238,11 +240,12 @@ public class MaintenanceController {
         return new ResponseEntity<>(farany, HttpStatus.OK);
     }
 
-    @PostMapping("/validEtape")
+  /**  @PostMapping("/validEtape")
     public ResponseEntity<Void>validEtape(@RequestHeader ("Authorization") String sessionId, @RequestParam("DEMANDE_CODE") String demandeCode){
         mtnceRepo.validerEtape(sessionId,demandeCode);
         return ResponseEntity.ok().build();
     }
+   */
 
     @PostMapping("/terminerDmd")
     public ResponseEntity<Void> fermerDemande(@RequestHeader ("Authorization") String sessionId, @RequestParam("DEMANDE_CODE") String demandeCode) {
@@ -365,6 +368,15 @@ public class MaintenanceController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(fournisseurs, HttpStatus.OK);
+    }
+
+    @GetMapping("/getTypeRefus")
+    public ResponseEntity<List<Enumerat>> getTypeRefus(@RequestHeader("Authorization") String sessionId){
+        List<Enumerat> action = mtnceRepo.getTypeAction(sessionId);
+        if(action.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(action, HttpStatus.OK);
     }
 
 

@@ -19,6 +19,7 @@ public class RealisationMapper implements RowMapper<Realisation> {
         real.setMAINT_PRIX_REAL(rs.getInt("MAINT_PRIX_REAL"));
         real.setMAINT_MRAQUE_MARQUE(rs.getString("MAINT_MRAQUE_MARQUE"));
         real.setMAINT_DATE_PREVU(rs.getDate("MAINT_DATE_PREVU"));
+        real.setMAINT_EXECUTION(rs.getString("MAINT_EXECUTION"));
         return real;
     }
 }

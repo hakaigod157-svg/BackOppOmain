@@ -23,5 +23,6 @@ public class Realisation implements Serializable {
     private String MAINT_MRAQUE_MARQUE;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date MAINT_DATE_PREVU;
+    private String MAINT_EXECUTION;
 
 }

@@ -8,7 +8,6 @@ import com.opham.prepa.repository.Maintenance.MaintenanceRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -57,78 +56,10 @@ public class MaintenanceService implements MaintenanceRepository {
 
         String sql = "{call MAINT_OPHAM..x_ListeMaintenances}";
 
-        return jdbcTemplate.query(
-                sql,
-
-                new MaintenanceListMapper()
+        return jdbcTemplate.query(sql,new MaintenanceListMapper()
         );
     }
 
-
-
-    @Override
-    public List<DemandeMaint> searchDemandes(
-            String sessionId,
-            String search,
-            String marque
-    ) {
-        JdbcTemplate jdbcTemplate =
-                userSessionManager.getUserJdbcTemplate(sessionId);
-        StringBuilder sql = new StringBuilder("""
-            SELECT
-                DEMANDE_CODE,
-                DEMANDE_DATE,
-                DEMANDE_VOITURE,
-                DEMANDE_MARQUE,
-                DEMANDE_TYPE,
-                DEMANDE_AUTEUR,
-                DEMANDE_DESCR,
-                DEMANDE_ETAT,
-                DEMANDE_DATE_CRE,
-                DEMANDE_USER_CRE,
-                DEMANDE_DATE_MODIF,
-                DEMANDE_USER_MODIF
-            FROM MAINT_OPHAM..MAINT_DEMANDE
-            WHERE 1 = 1
-            """);
-        List<Object> params = new ArrayList<>();
-
-        if (search != null && !search.trim().isEmpty()) {
-
-            String value = "%" + search.trim() + "%";
-
-            sql.append("""
-                AND (
-                       DEMANDE_CODE LIKE ?
-                    OR DEMANDE_AUTEUR LIKE ?
-                    OR DEMANDE_VOITURE LIKE ?
-                    OR DEMANDE_MARQUE LIKE ?
-                    OR DEMANDE_TYPE LIKE ?
-                    OR DEMANDE_DESCR LIKE ?
-                )
-                """);
-            params.add(value);
-            params.add(value);
-            params.add(value);
-            params.add(value);
-            params.add(value);
-            params.add(value);
-        }
-        if (marque != null && !marque.trim().isEmpty()) {
-            sql.append("""
-                AND DEMANDE_MARQUE = ?
-                """);
-            params.add(marque.trim());
-        }
-        sql.append("""
-            ORDER BY DEMANDE_DATE_CRE DESC, DEMANDE_CODE DESC
-            """);
-        return jdbcTemplate.query(
-                sql.toString(),
-                params.toArray(),
-                new DemandeMaintenanceMapper()
-        );
-    }
 
     @Override
     public String creerDemandeCode(String sessionId) {
@@ -182,10 +113,10 @@ public class MaintenanceService implements MaintenanceRepository {
 
 
     @Override
-    public void enregistrDmd(String sessionId, String demandeCode, String demandeVoiture, String demandeMarque, String demandeType, String demandeDescr) {
+    public void enregistrDmd(String sessionId, String demandeCode, String demandeVoiture, String demandeMarque, String demandeType, String demandeDescr, Integer demandeKm) {
         JdbcTemplate jdbcTemplate = userSessionManager.getUserJdbcTemplate(sessionId);
-        String sql = "{call MAINT_OPHAM..x_CreateDemande (?,?,?,?,?)}";
-        jdbcTemplate.update(sql, demandeCode, demandeVoiture,demandeMarque,demandeType,demandeDescr);
+        String sql = "{call MAINT_OPHAM..x_CreateDemande (?,?,?,?,?,?)}";
+        jdbcTemplate.update(sql, demandeCode, demandeVoiture,demandeMarque,demandeType,demandeDescr,demandeKm);
     }
 
     @Override
@@ -219,7 +150,7 @@ public class MaintenanceService implements MaintenanceRepository {
     public void refuserDemande(String sessionId, String demandeCode, String typeRefus, String descRefus) {
         JdbcTemplate jdbcTemplate = userSessionManager.getUserJdbcTemplate(sessionId);
         String sql = "{call MAINT_OPHAM..x_RefuserDemande (?, ?,?)}";
-        jdbcTemplate.update(sql, demandeCode);
+        jdbcTemplate.update(sql, demandeCode,typeRefus,descRefus);
     }
 
     @Override
@@ -245,12 +176,9 @@ public class MaintenanceService implements MaintenanceRepository {
 
     @Override
     public List<Voiture> getVoiture(String sessionId) {
-
         JdbcTemplate jdbcTemplate =
                 userSessionManager.getUserJdbcTemplate(sessionId);
-
         String sql = "{call MAINT_OPHAM..x_ListeVoiture}";
-
         return jdbcTemplate.query(sql,new VoitureMapper()
         );
     }
@@ -259,9 +187,7 @@ public class MaintenanceService implements MaintenanceRepository {
     public Voiture getVoitureByNum(String sessionId, String numVoiture){
         JdbcTemplate jdbcTemplate = userSessionManager.getUserJdbcTemplate(sessionId);
         String sql = "{call MAINT_OPHAM..x_GetVoitureByNum(?)}";
-        List<Voiture> resultat = jdbcTemplate.query(
-                sql,new Object[] { numVoiture },new VoitureMapper()
-        );
+        List<Voiture> resultat = jdbcTemplate.query(sql,new Object[] { numVoiture },new VoitureMapper());
         return resultat.isEmpty() ? null : resultat.get(0);
     }
 
@@ -300,6 +226,17 @@ public class MaintenanceService implements MaintenanceRepository {
         return jdbcTemplate.query(sql,new EnumeratMapper());
     }
 
+
+
+    @Override
+    public List<Enumerat>getTypeExecution(String sessionId) {
+
+        JdbcTemplate jdbcTemplate =
+                userSessionManager.getUserJdbcTemplate(sessionId);
+        String sql = "{call MAINT_OPHAM..x_ListeExecutions()}";
+        return jdbcTemplate.query(sql,new EnumeratMapper());
+    }
+
     @Override
     public List<Etape>getEtapesParClass(String sessionId, String natureEtape, String classification) {
 
@@ -324,7 +261,7 @@ public class MaintenanceService implements MaintenanceRepository {
         String sql = "{call MAINT_OPHAM..x_CloturerDemande(?)}";
         jdbcTemplate.update(sql, demandeCode);
     }
-/**
+/*
    @Override
     public String getLastEtape(String sessionId, String demandeCode){
         JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
@@ -338,6 +275,13 @@ public class MaintenanceService implements MaintenanceRepository {
         JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
         String sql="{call MAINT_OPHAM..x_GetDemandeEtat(?)}";
         return jdb.query(sql, new Object[]{ demandeCode }, new DemandeStatutMapper());
+    }
+
+    @Override
+    public List<MaintStatus> getMaintStatus(String sessionId, String maintCode){
+        JdbcTemplate jj = userSessionManager.getUserJdbcTemplate(sessionId);
+        String sql="{call MAINT_OPHAM..x_GetStatutMaintenance(?)}";
+        return jj.query(sql,new Object[]{maintCode}, new MaintStatusMapper());
     }
 
     @Override
@@ -387,10 +331,10 @@ public class MaintenanceService implements MaintenanceRepository {
 
     @Override
     public void validerEtapeReal(String sessionId, String maintCode, String intervReal,
-                                 String action, String fnr, Double prix, String marque, String dateReal) {
+                                 String action, String execution, String fnr, Double prix, String marque, String dateReal) {
         JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
-        String sql = "{call MAINT_OPHAM..x_ValiderEtapeReal(?, ?, ?, ?, ?, ?, ?)}";
-        jdb.update(sql, maintCode, intervReal, action, fnr, prix, marque, dateReal);
+        String sql = "{call MAINT_OPHAM..x_ValiderEtapeReal(?, ?, ?, ?, ?, ?, ?, ?)}";
+        jdb.update(sql, maintCode, intervReal, action,execution, fnr, prix, marque, dateReal);
     }
 
     @Override
@@ -431,10 +375,8 @@ public class MaintenanceService implements MaintenanceRepository {
         return jdb.query(sql,new EnumeratMapper());
 
     }
-/**
- * 
- */
 
 
 
-    }
+
+}

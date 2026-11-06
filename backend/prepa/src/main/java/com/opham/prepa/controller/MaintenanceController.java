@@ -62,20 +62,6 @@ public class MaintenanceController {
 
     }
 
-    @GetMapping("/demandes/search")
-    public ResponseEntity<List<DemandeMaint>> searchDemandes(
-            @RequestHeader("Authorization") String sessionId,
-            @RequestParam(required = false, defaultValue = "") String search,
-            @RequestParam(required = false, defaultValue = "") String marque
-    ) {
-        return ResponseEntity.ok(
-                maintenanceService.searchDemandes(
-                        sessionId,
-                        search,
-                        marque
-                )
-        );
-    }
 
     @PostMapping("/valider")
     public ResponseEntity<Void> validerDemande(
@@ -84,7 +70,7 @@ public class MaintenanceController {
             @RequestParam Integer kmVoiture,
             @RequestParam String classification
     ) {
-        maintenanceService.validerDemande(sessionId, demandeCode,kmVoiture,classification);
+        mtnceRepo.validerDemande(sessionId, demandeCode,kmVoiture,classification);
         return ResponseEntity.ok().build();
     }
 
@@ -93,7 +79,7 @@ public class MaintenanceController {
             @RequestHeader("Authorization") String sessionId,
             @RequestParam String demandeCode,
             @RequestParam String typeRefus,
-            @RequestParam String descRefus
+            @RequestParam (required = false) String descRefus
     ) {
         maintenanceService.refuserDemande(sessionId, demandeCode , typeRefus , descRefus);
         return ResponseEntity.ok().build();
@@ -155,10 +141,10 @@ public class MaintenanceController {
             @RequestParam String demandeVoiture,
             @RequestParam String demandeMarque,
             @RequestParam String demandeType,
-
-            @RequestParam String demandeDescr
+            @RequestParam String demandeDescr,
+            @RequestParam Integer demandeKm
     ) {
-        maintenanceService.enregistrDmd(sessionId,demandeCode,demandeVoiture,demandeMarque,demandeType,demandeDescr);
+        maintenanceService.enregistrDmd(sessionId,demandeCode,demandeVoiture,demandeMarque,demandeType,demandeDescr,demandeKm);
         return ResponseEntity.ok().build();
     }
     @GetMapping("/allVoiture")
@@ -234,13 +220,20 @@ public class MaintenanceController {
         return new ResponseEntity<>(etapeList, HttpStatus.OK);
     }
 
+
     @GetMapping("/etapeEnCours")
     public ResponseEntity<List<DemandeStatut>>getEtapeEnCours( @RequestHeader ("Authorization") String sessionId ,@RequestParam("DEMANDE_CODE") String demandeCode){
        List<DemandeStatut> farany = mtnceRepo.getDemandeStatus(sessionId,demandeCode);
         return new ResponseEntity<>(farany, HttpStatus.OK);
     }
 
-  /**  @PostMapping("/validEtape")
+    /*@GetMapping("/etapeEnCours")
+    public ResponseEntity<List<MaintStatus>>getEtapeEnCours( @RequestHeader ("Authorization") String sessionId ,@RequestParam("MAINT_CODE") String demandeCode){
+       List<MaintStatus> farany = mtnceRepo.getMaintStatus(sessionId,demandeCode);
+        return new ResponseEntity<>(farany, HttpStatus.OK);
+    }*/
+
+  /* @PostMapping("/validEtape")
     public ResponseEntity<Void>validEtape(@RequestHeader ("Authorization") String sessionId, @RequestParam("DEMANDE_CODE") String demandeCode){
         mtnceRepo.validerEtape(sessionId,demandeCode);
         return ResponseEntity.ok().build();
@@ -248,7 +241,7 @@ public class MaintenanceController {
    */
 
     @PostMapping("/terminerDmd")
-    public ResponseEntity<Void> fermerDemande(@RequestHeader ("Authorization") String sessionId, @RequestParam("DEMANDE_CODE") String demandeCode) {
+    public ResponseEntity<Void> fermerDemande(@RequestHeader ("Authorization") String sessionId, @RequestParam("MAINT_CODE") String demandeCode) {
         mtnceRepo.fermerDemande(sessionId, demandeCode);
         return ResponseEntity.ok().build();
     }
@@ -298,12 +291,13 @@ public class MaintenanceController {
             @RequestHeader("Authorization") String sessionId,
             @RequestParam("MAINT_CODE_REAL") String maintCode,
             @RequestParam("MAINT_INTERV_REAL") String intervReal,
-            @RequestParam(value = "MAINT_ACTION_REAL", required = false) String action,
+            @RequestParam(value = "MAINT_ACTION_REAL") String action,
+            @RequestParam(value = "MAINT_EXECUTION") String execution,
             @RequestParam(value = "MAINT_FNR_REAL", required = false) String fnr,
             @RequestParam(value = "MAINT_PRIX_REAL", required = false) Double prix,
             @RequestParam(value = "MAINT_MRAQUE_MARQUE", required = false) String marque,
             @RequestParam(value = "MAINT_DATE_REAL", required = false) String dateReal) {
-        mtnceRepo.validerEtapeReal(sessionId, maintCode, intervReal, action, fnr, prix, marque, dateReal);
+        mtnceRepo.validerEtapeReal(sessionId, maintCode, intervReal, action, execution,fnr, prix, marque, dateReal);
         return ResponseEntity.ok(Collections.singletonMap("success", true));
     }
 
@@ -372,11 +366,20 @@ public class MaintenanceController {
 
     @GetMapping("/getTypeRefus")
     public ResponseEntity<List<Enumerat>> getTypeRefus(@RequestHeader("Authorization") String sessionId){
-        List<Enumerat> action = mtnceRepo.getTypeAction(sessionId);
-        if(action.isEmpty()){
+        List<Enumerat> refus = mtnceRepo.getTypeRefus(sessionId);
+        if(refus.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(action, HttpStatus.OK);
+        return new ResponseEntity<>(refus, HttpStatus.OK);
+    }
+
+    @GetMapping("/getTypeExecution")
+    public ResponseEntity<List<Enumerat>> getTypeExecution(@RequestHeader("Authorization") String sessionId){
+        List<Enumerat> exec = mtnceRepo.getTypeExecution(sessionId);
+        if(exec.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(exec, HttpStatus.OK);
     }
 
 

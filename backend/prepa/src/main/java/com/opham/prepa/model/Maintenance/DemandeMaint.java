@@ -32,6 +32,7 @@ public class DemandeMaint implements Serializable {
     private int DEMANDE_USER_MODIF;
     private String DEMANDE_REFUS;
     private String DEMANDE_REFUS_DESCR;
+    private int DEMANDE_KM;
 
 
 

@@ -9,12 +9,6 @@ public interface MaintenanceRepository {
 
     List<Voiture> getVoiture(String sessionId);
 
-    List<DemandeMaint> searchDemandes(
-            String sessionId,
-            String search,
-            String marque
-    );
-
     List<DemandeMaint> getDemandeMaintenance(
             String sessionId
 //            String codeDemande
@@ -31,7 +25,9 @@ public interface MaintenanceRepository {
 
   void validerDemande(String sessionId, String demandeCode , Integer voitureKm , String classification);
 
-    void enregistrDmd(String sessionId, String demandeCode, String demandeVoiture, String demandeMarque, String demandeType, String demandeDescr);
+    //void enregistrDmd(String sessionId, String demandeCode, String demandeVoiture, String demandeMarque, String demandeType, String demandeDescr);
+
+    void enregistrDmd(String sessionId, String demandeCode, String demandeVoiture, String demandeMarque, String demandeType, String demandeDescr, Integer demandeKm);
 
     void updateDemande(
             String sessionId,
@@ -72,6 +68,8 @@ public interface MaintenanceRepository {
 
     List<Enumerat>getTypeClassific(String sessionId);
 
+    List<Enumerat>getTypeExecution(String sessionId);
+
     List<Etape> getEtapesParClass(String sessionId, String natureEtape , String classification);
 
     void validerEtape(String sessionId, String demandeCode);
@@ -82,6 +80,8 @@ public interface MaintenanceRepository {
 
     List<DemandeStatut> getDemandeStatus(String sessionId, String demandeCode);
 
+    List<MaintStatus> getMaintStatus(String sessionId, String maintCode);
+
     List<Historique> getHistoriqueDmd(String sessionId, String demandeCode);
 
     List<EtapeLigne> getEtapePrepa(String sessionId, String maintCode);
@@ -91,8 +91,12 @@ public interface MaintenanceRepository {
    // void validerEtapePrepa(String sessionId, String maintCode, String etapeLigne, String intervenant);
     void validerEtapePrepa(String sessionId, String maintCode, String etapeLigne);
 
-    void validerEtapeReal(String sessionId, String maintCode, String intervReal,
+    /**void validerEtapeReal(String sessionId, String maintCode, String intervReal,
                           String action, String fnr, Double prix, String marque, String dateReal);
+     */
+
+    void validerEtapeReal(String sessionId, String maintCode, String intervReal,
+                          String action, String execution, String fnr, Double prix, String marque, String dateReal);
 
     void addEtapeReal(String sessionId, String maintCode, String intervReal,
                       String datePrevu, String action, String fnr, Double prix, String marque);

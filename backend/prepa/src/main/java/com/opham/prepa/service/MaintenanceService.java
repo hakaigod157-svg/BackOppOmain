@@ -376,6 +376,13 @@ public class MaintenanceService implements MaintenanceRepository {
 
     }
 
+    @Override
+    public List<FicheVoiture> getListeFicheVoiture(String sessionId){
+        JdbcTemplate jdbVoiture = userSessionManager.getUserJdbcTemplate(sessionId);
+        String sql="SELECT * FROM MAINT_OPHAM..MAINT_KM_VOIT";
+        return jdbVoiture.query(sql,new FicheVoitureMapper());
+    }
+
 
 
 

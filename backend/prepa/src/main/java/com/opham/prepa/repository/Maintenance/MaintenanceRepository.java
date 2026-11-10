@@ -109,5 +109,7 @@ public interface MaintenanceRepository {
 
     List<Enumerat> getTypeRefus(String sessionId);
 
+    List<FicheVoiture> getListeFicheVoiture(String sessionId);
+
     /** DemandeMaint getDmdbyCode(String sessionId,String demandeCode); */
 }

@@ -383,6 +383,15 @@ public class MaintenanceController {
     }
 
 
+    @GetMapping("/getFicheVoitures")
+    public ResponseEntity<List<FicheVoiture>> getFicheVoit(@RequestHeader("Authorization") String sessionId){
+        List<FicheVoiture> fvoiture = mtnceRepo.getListeFicheVoiture(sessionId);
+        if(fvoiture.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        return new ResponseEntity<>(fvoiture,HttpStatus.OK);
+    }
+
 
 
 }

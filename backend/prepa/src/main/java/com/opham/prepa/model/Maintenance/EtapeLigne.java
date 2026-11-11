@@ -20,4 +20,6 @@ public class EtapeLigne implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date MAINT_ETAPE_REEL;
     private Integer MAINT_ETAPE_ETAT;
+    private Integer MAINT_ETAPE_UPLOAD;
+    private byte MAINT_ETAPE_PJ;
 }

@@ -315,7 +315,7 @@ public class MaintenanceService implements MaintenanceRepository {
 ////////////////////////////////
 
 
-    /** @Override
+    /* @Override
     public void validerEtapePrepa(String sessionId, String maintCode, String etapeLigne, String intervenant) {
         JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
         String sql = "{call MAINT_OPHAM..x_ValiderEtapePrepa(?, ?, ?)}";

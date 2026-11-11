@@ -24,5 +24,7 @@ public class Realisation implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date MAINT_DATE_PREVU;
     private String MAINT_EXECUTION;
+    private Integer MAINT_UPLOAD_REAL;
+    private Byte MAINT_PJ_REAL;
 
 }

@@ -16,6 +16,8 @@ public class EtapeLigneMapper implements RowMapper<EtapeLigne> {
         lgn.setMAINT_ETAPE_PREVU(rs.getDate("MAINT_ETAPE_PREVU"));
         lgn.setMAINT_ETAPE_REEL(rs.getDate("MAINT_ETAPE_REEL"));
         lgn.setMAINT_ETAPE_ETAT(rs.getInt("MAINT_ETAPE_ETAT"));
+        lgn.setMAINT_ETAPE_UPLOAD(rs.getInt("MAINT_ETAPE_UPLOAD"));
+        lgn.setMAINT_ETAPE_PJ(rs.getByte("MAINT_ETAPE_PJ"));
         return lgn;
     }
 }

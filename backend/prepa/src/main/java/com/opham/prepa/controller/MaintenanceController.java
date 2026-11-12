@@ -2,6 +2,7 @@ package com.opham.prepa.controller;
 import com.opham.prepa.model.Maintenance.*;
 import com.opham.prepa.service.MaintenanceService;
 import org.apache.coyote.Response;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.opham.prepa.repository.Maintenance.MaintenanceRepository;
@@ -10,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -275,31 +279,7 @@ public class MaintenanceController {
     }
 
 
-    /////////////////////
-    @PostMapping("/validerEtapePrepa")
-    public ResponseEntity<?> validerEtapePrepa(
-            @RequestHeader("Authorization") String sessionId,
-            @RequestParam("MAINT_CODE_LIGNE") String maintCode,
-            @RequestParam("MAINT_ETAPE_LIGNE") String etapeLigne)
-            {
-        mtnceRepo.validerEtapePrepa(sessionId, maintCode, etapeLigne);
-        return ResponseEntity.ok(Collections.singletonMap("success", true));
-    }
 
-    @PostMapping("/validerEtapeReal")
-    public ResponseEntity<?> validerEtapeReal(
-            @RequestHeader("Authorization") String sessionId,
-            @RequestParam("MAINT_CODE_REAL") String maintCode,
-            @RequestParam("MAINT_INTERV_REAL") String intervReal,
-            @RequestParam(value = "MAINT_ACTION_REAL") String action,
-            @RequestParam(value = "MAINT_EXECUTION") String execution,
-            @RequestParam(value = "MAINT_FNR_REAL", required = false) String fnr,
-            @RequestParam(value = "MAINT_PRIX_REAL", required = false) Double prix,
-            @RequestParam(value = "MAINT_MRAQUE_MARQUE", required = false) String marque,
-            @RequestParam(value = "MAINT_DATE_REAL", required = false) String dateReal) {
-        mtnceRepo.validerEtapeReal(sessionId, maintCode, intervReal, action, execution,fnr, prix, marque, dateReal);
-        return ResponseEntity.ok(Collections.singletonMap("success", true));
-    }
 
     /**
      * Méthode lié au bouton "AJOUTER REALISATION "
@@ -391,6 +371,154 @@ public class MaintenanceController {
             }
         return new ResponseEntity<>(fvoiture,HttpStatus.OK);
     }
+
+
+
+
+
+
+
+
+    ///////////////////// TALOHA
+  /*  @PostMapping("/validerEtapePrepa")
+    public ResponseEntity<?> validerEtapePrepa(
+            @RequestHeader("Authorization") String sessionId,
+            @RequestParam("MAINT_CODE_LIGNE") String maintCode,
+            @RequestParam("MAINT_ETAPE_LIGNE") String etapeLigne)
+            {
+        mtnceRepo.validerEtapePrepa(sessionId, maintCode, etapeLigne);
+        return ResponseEntity.ok(Collections.singletonMap("success", true));
+    }
+
+    @PostMapping("/validerEtapeReal")
+    public ResponseEntity<?> validerEtapeReal(
+            @RequestHeader("Authorization") String sessionId,
+            @RequestParam("MAINT_CODE_REAL") String maintCode,
+            @RequestParam("MAINT_INTERV_REAL") String intervReal,
+            @RequestParam(value = "MAINT_ACTION_REAL") String action,
+            @RequestParam(value = "MAINT_EXECUTION") String execution,
+            @RequestParam(value = "MAINT_FNR_REAL", required = false) String fnr,
+            @RequestParam(value = "MAINT_PRIX_REAL", required = false) Double prix,
+            @RequestParam(value = "MAINT_MRAQUE_MARQUE", required = false) String marque,
+            @RequestParam(value = "MAINT_DATE_REAL", required = false) String dateReal) {
+        mtnceRepo.validerEtapeReal(sessionId, maintCode, intervReal, action, execution,fnr, prix, marque, dateReal);
+        return ResponseEntity.ok(Collections.singletonMap("success", true));
+    }
+   */
+
+
+    @PostMapping(
+            value = "/validerEtapePrepa",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<?> validerEtapePrepa(
+            @RequestHeader("Authorization") String sessionId,
+            @RequestParam("MAINT_CODE_LIGNE") String maintCode,
+            @RequestParam("MAINT_ETAPE_LIGNE") String etapeLigne,
+            @RequestPart(value = "file", required = false) MultipartFile file
+    ) throws IOException {
+
+        byte[] contenu = file != null && !file.isEmpty()
+                ? file.getBytes()
+                : null;
+
+        maintenanceService.validerEtapePrepa(
+                sessionId,
+                maintCode,
+                etapeLigne,
+                contenu
+        );
+
+        return ResponseEntity.ok(
+                Collections.singletonMap("success", true)
+        );
+    }
+
+
+    @PostMapping(
+            value = "/validerEtapeReal",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<?> validerEtapeReal(
+            @RequestHeader("Authorization") String sessionId,
+            @RequestParam("MAINT_CODE_REAL") String maintCode,
+            @RequestParam("MAINT_INTERV_REAL") String intervReal,
+            @RequestParam(value = "MAINT_ACTION_REAL", required = false) String action,
+            @RequestParam(value = "MAINT_EXECUTION", required = false) String execution,
+            @RequestParam(value = "MAINT_FNR_REAL", required = false) String fnr,
+            @RequestParam(value = "MAINT_PRIX_REAL", required = false) Double prix,
+            @RequestParam(value = "MAINT_MRAQUE_MARQUE", required = false) String marque,
+            @RequestParam(value = "MAINT_DATE_REAL", required = false) String dateReal,
+            @RequestPart(value = "file", required = false) MultipartFile file
+    ) throws IOException {
+
+        byte[] contenu = file != null && !file.isEmpty()
+                ? file.getBytes()
+                : null;
+
+        maintenanceService.validerEtapeReal(
+                sessionId,
+                maintCode,
+                intervReal,
+                action,
+                execution,
+                fnr,
+                prix,
+                marque,
+                dateReal,
+                contenu
+        );
+
+        return ResponseEntity.ok(
+                Collections.singletonMap("success", true)
+        );
+    }
+
+
+
+    @GetMapping("/getEtapePrepaPJ")
+    public ResponseEntity<String> getEtapePrepaPJ(
+            @RequestHeader("Authorization") String sessionId,
+            @RequestParam("MAINT_CODE_LIGNE") String maintCode,
+            @RequestParam("MAINT_ETAPE_LIGNE") String etapeLigne
+    ) {
+        byte[] fichier = maintenanceService.getEtapePrepaPJ(
+                sessionId, maintCode, etapeLigne
+        );
+
+        if (fichier == null || fichier.length == 0) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String base64 = Base64.getEncoder().encodeToString(fichier);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_PLAIN)
+                .body(base64);
+    }
+
+
+    @GetMapping("/getEtapeRealPJ")
+    public ResponseEntity<String> getEtapeRealPJ(
+            @RequestHeader("Authorization") String sessionId,
+            @RequestParam("MAINT_CODE_REAL") String maintCode,
+            @RequestParam("MAINT_INTERV_REAL") String intervReal
+    ) {
+        byte[] fichier = maintenanceService.getEtapeRealPJ(
+                sessionId, maintCode, intervReal
+        );
+
+        if (fichier == null || fichier.length == 0) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String base64 = Base64.getEncoder().encodeToString(fichier);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_PLAIN)
+                .body(base64);
+    }
+
 
 
 

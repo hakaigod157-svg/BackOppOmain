@@ -21,5 +21,5 @@ public class EtapeLigne implements Serializable {
     private Date MAINT_ETAPE_REEL;
     private Integer MAINT_ETAPE_ETAT;
     private Integer MAINT_ETAPE_UPLOAD;
-    private byte MAINT_ETAPE_PJ;
+    private Integer MAINT_ETAPE_HAS_PJ;
 }

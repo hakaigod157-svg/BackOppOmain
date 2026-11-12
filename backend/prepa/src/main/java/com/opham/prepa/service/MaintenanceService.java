@@ -322,6 +322,11 @@ public class MaintenanceService implements MaintenanceRepository {
         jdb.update(sql, maintCode, etapeLigne, intervenant);
     }
     */
+
+
+
+
+    /*
     @Override
     public void validerEtapePrepa(String sessionId, String maintCode, String etapeLigne) {
         JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
@@ -336,6 +341,11 @@ public class MaintenanceService implements MaintenanceRepository {
         String sql = "{call MAINT_OPHAM..x_ValiderEtapeReal(?, ?, ?, ?, ?, ?, ?, ?)}";
         jdb.update(sql, maintCode, intervReal, action,execution, fnr, prix, marque, dateReal);
     }
+
+
+    */
+
+
 
     @Override
     public void addEtapeReal(String sessionId, String maintCode, String intervReal,
@@ -381,6 +391,73 @@ public class MaintenanceService implements MaintenanceRepository {
         JdbcTemplate jdbVoiture = userSessionManager.getUserJdbcTemplate(sessionId);
         String sql="SELECT * FROM MAINT_OPHAM..MAINT_KM_VOIT";
         return jdbVoiture.query(sql,new FicheVoitureMapper());
+    }
+
+    @Override
+    public void validerEtapePrepa(String sessionId,String maintCode,String etapeLigne,byte[] fichier) {
+        JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
+
+        // La PJ est optionnelle. Si elle est présente, on la met à jour avant validation.
+        if (fichier != null && fichier.length > 0) {
+            String sqlUpdate = """
+            UPDATE MAINT_OPHAM..MAINT_ETAPE_LIGNE
+            SET MAINT_ETAPE_PJ = ?
+            WHERE MAINT_CODE_LIGNE = ?
+              AND MAINT_ETAPE_LIGNE = ?
+            """;
+
+            jdb.update(sqlUpdate, fichier, maintCode, etapeLigne);
+        }
+        String sqlValidation =
+                "{call MAINT_OPHAM..x_ValiderEtapePrepa(?, ?)}";
+        jdb.update(sqlValidation, maintCode, etapeLigne);
+    }
+
+
+    @Override
+    public void validerEtapeReal(String sessionId,String maintCode,String intervReal,String action,String execution,String fnr,Double prix,String marque,String dateReal,byte[] fichier) {
+        JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
+        // La PJ est optionnelle. Si elle est présente, on la met à jour avant validation.
+        if (fichier != null && fichier.length > 0) {
+            String sqlUpdate = """
+            UPDATE MAINT_OPHAM..MAINT_REALISATION
+            SET MAINT_PJ_REAL = ?
+            WHERE MAINT_CODE_REAL = ?
+              AND MAINT_INTERV_REAL = ?
+            """;
+
+            jdb.update(sqlUpdate, fichier, maintCode, intervReal);
+        }
+
+        String sqlValidation =
+                "{call MAINT_OPHAM..x_ValiderEtapeReal(?, ?, ?, ?, ?, ?, ?, ?)}";
+
+        jdb.update(sqlValidation,maintCode,intervReal,action,execution,fnr,prix,marque,dateReal);
+    }
+
+    @Override
+    public byte[] getEtapePrepaPJ(
+            String sessionId, String maintCode, String etapeLigne) {
+        JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
+
+        String sql = "{call MAINT_OPHAM..x_GetEtapePrepaPJ(?, ?)}";
+
+        List<byte[]> resultat = jdb.query(sql, (rs, rowNum) -> rs.getBytes(1), maintCode,etapeLigne);
+
+        return resultat.isEmpty() ? null : resultat.get(0);
+    }
+
+
+    @Override
+    public byte[] getEtapeRealPJ(
+            String sessionId, String maintCode, String intervReal) {
+        JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
+
+        String sql = "{call MAINT_OPHAM..x_GetEtapeRealPJ(?, ?)}";
+
+        List<byte[]> resultat = jdb.query(sql,(rs, rowNum) -> rs.getBytes(1), maintCode,intervReal);
+
+        return resultat.isEmpty() ? null : resultat.get(0);
     }
 
 

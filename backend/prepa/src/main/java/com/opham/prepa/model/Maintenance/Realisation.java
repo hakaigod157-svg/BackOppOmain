@@ -25,6 +25,6 @@ public class Realisation implements Serializable {
     private Date MAINT_DATE_PREVU;
     private String MAINT_EXECUTION;
     private Integer MAINT_UPLOAD_REAL;
-    private Byte MAINT_PJ_REAL;
+    private int MAINT_REAL_HAS_PJ;
 
 }

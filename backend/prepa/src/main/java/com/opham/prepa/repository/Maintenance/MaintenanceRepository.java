@@ -89,14 +89,35 @@ public interface MaintenanceRepository {
     List<Realisation> getEtapeReal(String sessionId, String maintCode);
 
    // void validerEtapePrepa(String sessionId, String maintCode, String etapeLigne, String intervenant);
-    void validerEtapePrepa(String sessionId, String maintCode, String etapeLigne);
+
+
+
+
+
+    //void validerEtapePrepa(String sessionId, String maintCode, String etapeLigne);
 
     /**void validerEtapeReal(String sessionId, String maintCode, String intervReal,
                           String action, String fnr, Double prix, String marque, String dateReal);
      */
 
-    void validerEtapeReal(String sessionId, String maintCode, String intervReal,
+    /*void validerEtapeReal(String sessionId, String maintCode, String intervReal,
                           String action, String execution, String fnr, Double prix, String marque, String dateReal);
+    */
+
+    void validerEtapePrepa(String sessionId,String maintCode,String etapeLigne,byte[] fichier);
+
+    void validerEtapeReal(
+            String sessionId,
+            String maintCode,
+            String intervReal,
+            String action,
+            String execution,
+            String fnr,
+            Double prix,
+            String marque,
+            String dateReal,
+            byte[] fichier
+    );
 
     void addEtapeReal(String sessionId, String maintCode, String intervReal,
                       String datePrevu, String action, String fnr, Double prix, String marque);
@@ -110,6 +131,12 @@ public interface MaintenanceRepository {
     List<Enumerat> getTypeRefus(String sessionId);
 
     List<FicheVoiture> getListeFicheVoiture(String sessionId);
+
+    byte[] getEtapePrepaPJ(
+            String sessionId, String maintCode, String etapeLigne);
+
+    byte[] getEtapeRealPJ(
+            String sessionId, String maintCode, String intervReal);
 
     /** DemandeMaint getDmdbyCode(String sessionId,String demandeCode); */
 }

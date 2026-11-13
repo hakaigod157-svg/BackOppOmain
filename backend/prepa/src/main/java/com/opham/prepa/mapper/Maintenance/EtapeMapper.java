@@ -11,13 +11,13 @@ public class EtapeMapper implements  RowMapper<Etape>{
         @Override
         public Etape mapRow(ResultSet rs, int rowNum) throws SQLException {
             Etape vaovao = new Etape();
-            vaovao.setCLASSIFICATION(rs.getString("CLASSIFICATION"));
+          //  vaovao.setCLASSIFICATION(rs.getString("CLASSIFICATION"));
             vaovao.setCODE(rs.getString("CODE"));
-            vaovao.setVALEUR(rs.getString("VALEUR"));
+          /*  vaovao.setVALEUR(rs.getString("VALEUR"));
             vaovao.setORDRE(rs.getInt("ORDRE"));
             vaovao.setDUREE(rs.getInt("DUREE"));
             vaovao.setETAT_ID(rs.getInt("ETAT_ID"));
-
+*/
             return vaovao;
         }
 }

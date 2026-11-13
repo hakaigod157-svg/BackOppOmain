@@ -22,6 +22,7 @@ public class RealisationMapper implements RowMapper<Realisation> {
         real.setMAINT_EXECUTION(rs.getString("MAINT_EXECUTION"));
         real.setMAINT_UPLOAD_REAL(rs.getInt("MAINT_UPLOAD_REAL"));
         real.setMAINT_REAL_HAS_PJ(rs.getInt("MAINT_REAL_HAS_PJ"));
+        real.setMAINT_REFERENCE_PIECE(rs.getString("MAINT_REFERENCE_PIECE"));
         return real;
     }
 }

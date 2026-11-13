@@ -104,9 +104,12 @@ public interface MaintenanceRepository {
                           String action, String execution, String fnr, Double prix, String marque, String dateReal);
     */
 
-    void validerEtapePrepa(String sessionId,String maintCode,String etapeLigne,byte[] fichier);
+    // void validerEtapePrepa(String sessionId,String maintCode,String etapeLigne,byte[] fichier);
 
-    void validerEtapeReal(
+
+  void validerEtapePrepa(String sessionId, String maintCode, String etapeLigne, String datePrepa, byte[] fichier);
+
+  void validerEtapeReal(
             String sessionId,
             String maintCode,
             String intervReal,
@@ -138,5 +141,9 @@ public interface MaintenanceRepository {
     byte[] getEtapeRealPJ(
             String sessionId, String maintCode, String intervReal);
 
-    /** DemandeMaint getDmdbyCode(String sessionId,String demandeCode); */
+    List<Enumerat> getReferencePiece(String sessionId);
+
+  List<Etape> getEtapesGlobales(String sessionid);
+
+  /** DemandeMaint getDmdbyCode(String sessionId,String demandeCode); */
 }

@@ -394,7 +394,7 @@ public class MaintenanceService implements MaintenanceRepository {
     }
 
     @Override
-    public void validerEtapePrepa(String sessionId,String maintCode,String etapeLigne,byte[] fichier) {
+    public void validerEtapePrepa(String sessionId,String maintCode,String etapeLigne,String datePrepa, byte[] fichier) {
         JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
 
         // La PJ est optionnelle. Si elle est présente, on la met à jour avant validation.
@@ -409,8 +409,8 @@ public class MaintenanceService implements MaintenanceRepository {
             jdb.update(sqlUpdate, fichier, maintCode, etapeLigne);
         }
         String sqlValidation =
-                "{call MAINT_OPHAM..x_ValiderEtapePrepa(?, ?)}";
-        jdb.update(sqlValidation, maintCode, etapeLigne);
+                "{call MAINT_OPHAM..x_ValiderEtapePrepa(?, ?,?)}";
+        jdb.update(sqlValidation, maintCode, etapeLigne,datePrepa);
     }
 
 
@@ -458,6 +458,21 @@ public class MaintenanceService implements MaintenanceRepository {
         List<byte[]> resultat = jdb.query(sql,(rs, rowNum) -> rs.getBytes(1), maintCode,intervReal);
 
         return resultat.isEmpty() ? null : resultat.get(0);
+    }
+
+
+    @Override
+    public List<Enumerat> getReferencePiece (String sessionId ) {
+        JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
+        String sql = "{call MAINT_OPHAM..x_ListeReferences()}";
+        return jdb.query(sql,new EnumeratMapper());
+    }
+
+    @Override
+    public List<Etape> getEtapesGlobales (String sessionid){
+        JdbcTemplate jUser = userSessionManager.getUserJdbcTemplate(sessionid);
+        String sql = "SELECT CODE FROM MAINT_OPHAM..MAINT_PARAMETRE";
+        return jUser.query(sql,new EtapeMapper());
     }
 
 

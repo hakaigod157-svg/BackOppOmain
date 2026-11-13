@@ -26,5 +26,6 @@ public class Realisation implements Serializable {
     private String MAINT_EXECUTION;
     private Integer MAINT_UPLOAD_REAL;
     private int MAINT_REAL_HAS_PJ;
+    private String MAINT_REFERENCE_PIECE;
 
 }

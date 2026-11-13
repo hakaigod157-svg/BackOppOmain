@@ -11,11 +11,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Etape implements Serializable{
-    private String CLASSIFICATION;
+    //private String CLASSIFICATION;
     private String CODE;
-    private String VALEUR;
+  /*  private String VALEUR;
     private int ORDRE;
     private int DUREE;
     private int ETAT_ID;
-
+*/
 }

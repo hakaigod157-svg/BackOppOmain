@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -415,6 +416,7 @@ public class MaintenanceController {
             @RequestHeader("Authorization") String sessionId,
             @RequestParam("MAINT_CODE_LIGNE") String maintCode,
             @RequestParam("MAINT_ETAPE_LIGNE") String etapeLigne,
+            @RequestParam("MAINT_ETAPE_REEL" ) String datePrepa,
             @RequestPart(value = "file", required = false) MultipartFile file
     ) throws IOException {
 
@@ -426,6 +428,7 @@ public class MaintenanceController {
                 sessionId,
                 maintCode,
                 etapeLigne,
+                datePrepa,
                 contenu
         );
 
@@ -520,6 +523,23 @@ public class MaintenanceController {
     }
 
 
+    @GetMapping ("/getRef")
+    public ResponseEntity<List<Enumerat>> getReference (@RequestHeader ("Authorization") String sessionId){
+        List<Enumerat> exec = mtnceRepo.getReferencePiece(sessionId);
+        if(exec.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(exec, HttpStatus.OK);
+    }
+
+    @GetMapping ("/getParametreRhtra")
+    public ResponseEntity<List<Etape>> getEtapesGlob (@RequestHeader ("Authorization") String sessionId){
+        List<Etape> exec = mtnceRepo.getEtapesGlobales(sessionId);
+        if(exec.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(exec, HttpStatus.OK);
+    }
 
 
 }

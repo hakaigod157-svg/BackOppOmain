@@ -540,6 +540,14 @@ public class MaintenanceController {
         }
         return new ResponseEntity<>(exec, HttpStatus.OK);
     }
+    @GetMapping("/getDeadline")
+    public ResponseEntity<List<DeadLine>> getDeadlineTechnique ( @RequestHeader("Authorization") String sessionid , @RequestParam("MAINT_CODE") String maintCode , @RequestParam("ETAPE_LIGNE") String etapeLigne){
+        List<DeadLine> temps = mtnceRepo.getDateButoir(sessionid,maintCode,etapeLigne);
+        if (temps.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(temps, HttpStatus.OK);
+    }
 
 
 }

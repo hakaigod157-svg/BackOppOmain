@@ -47,17 +47,10 @@ public class MaintenanceService implements MaintenanceRepository {
 
 
     @Override
-    public List<Maintenance> getMaintenance(
-            String sessionId
-    ) {
-
-        JdbcTemplate jdbcTemplate =
-                userSessionManager.getUserJdbcTemplate(sessionId);
-
+    public List<Maintenance> getMaintenance(String sessionId) {
+        JdbcTemplate jdbcTemplate = userSessionManager.getUserJdbcTemplate(sessionId);
         String sql = "{call MAINT_OPHAM..x_ListeMaintenances}";
-
-        return jdbcTemplate.query(sql,new MaintenanceListMapper()
-        );
+        return jdbcTemplate.query(sql,new MaintenanceListMapper());
     }
 
 
@@ -70,7 +63,7 @@ public class MaintenanceService implements MaintenanceRepository {
     public String creeMtnceCode(String sessionId) {
         return code.generateCode(sessionId, "MT");
     }
-    /**
+    /*
     @Override
     public void validerDemande(String sessionId, String demandeCode) {
         JdbcTemplate jdbcTemplate = userSessionManager.getUserJdbcTemplate(sessionId);
@@ -474,6 +467,16 @@ public class MaintenanceService implements MaintenanceRepository {
         String sql = "SELECT CODE FROM MAINT_OPHAM..MAINT_PARAMETRE";
         return jUser.query(sql,new EtapeMapper());
     }
+
+
+    @Override
+    public List<DeadLine> getDateButoir(String sessionId,String maintCode,String etapeLigne){
+        JdbcTemplate jUser = userSessionManager.getUserJdbcTemplate(sessionId);
+        String sqlGet = "{call MAINT_OPHAM..x_GetRealisationDeadline(?,?)}";
+        return jUser.query(sqlGet,new Object[]{maintCode,etapeLigne} ,new DeadLineMapper());
+    }
+
+
 
 
 

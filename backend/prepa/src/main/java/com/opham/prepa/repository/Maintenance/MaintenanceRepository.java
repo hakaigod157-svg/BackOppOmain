@@ -145,5 +145,7 @@ public interface MaintenanceRepository {
 
   List<Etape> getEtapesGlobales(String sessionid);
 
+  List<DeadLine> getDateButoir(String sessionId, String maintCode, String etapeLigne);
+
   /** DemandeMaint getDmdbyCode(String sessionId,String demandeCode); */
 }

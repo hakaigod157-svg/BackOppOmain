@@ -109,7 +109,7 @@ public interface MaintenanceRepository {
 
   void validerEtapePrepa(String sessionId, String maintCode, String etapeLigne, String datePrepa, byte[] fichier);
 
-  void validerEtapeReal(
+  /* void validerEtapeReal(
             String sessionId,
             String maintCode,
             String intervReal,
@@ -121,6 +121,8 @@ public interface MaintenanceRepository {
             String dateReal,
             byte[] fichier
     );
+    
+   */
 
     void addEtapeReal(String sessionId, String maintCode, String intervReal,
                       String datePrevu, String action, String fnr, Double prix, String marque);
@@ -134,6 +136,8 @@ public interface MaintenanceRepository {
     List<Enumerat> getTypeRefus(String sessionId);
 
     List<FicheVoiture> getListeFicheVoiture(String sessionId);
+
+    void validerEtapeReal(String sessionId, String maintCode, String intervReal, String action, String execution, String fnr, Double prix, String marque, String dateReal, byte[] fichier, String reference);
 
     byte[] getEtapePrepaPJ(
             String sessionId, String maintCode, String etapeLigne);

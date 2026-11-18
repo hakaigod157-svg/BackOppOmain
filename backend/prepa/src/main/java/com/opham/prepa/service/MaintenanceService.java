@@ -408,7 +408,7 @@ public class MaintenanceService implements MaintenanceRepository {
 
 
     @Override
-    public void validerEtapeReal(String sessionId,String maintCode,String intervReal,String action,String execution,String fnr,Double prix,String marque,String dateReal,byte[] fichier) {
+    public void validerEtapeReal(String sessionId,String maintCode,String intervReal,String action,String execution,String fnr,Double prix,String marque,String dateReal,byte[] fichier, String reference) {
         JdbcTemplate jdb = userSessionManager.getUserJdbcTemplate(sessionId);
         // La PJ est optionnelle. Si elle est présente, on la met à jour avant validation.
         if (fichier != null && fichier.length > 0) {
@@ -423,9 +423,9 @@ public class MaintenanceService implements MaintenanceRepository {
         }
 
         String sqlValidation =
-                "{call MAINT_OPHAM..x_ValiderEtapeReal(?, ?, ?, ?, ?, ?, ?, ?)}";
+                "{call MAINT_OPHAM..x_ValiderEtapeReal(?, ?, ?, ?, ?, ?, ?, ?,?)}";
 
-        jdb.update(sqlValidation,maintCode,intervReal,action,execution,fnr,prix,marque,dateReal);
+        jdb.update(sqlValidation,maintCode,intervReal,action,execution,fnr,prix,marque,dateReal,reference);
     }
 
     @Override

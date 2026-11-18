@@ -451,7 +451,8 @@ public class MaintenanceController {
             @RequestParam(value = "MAINT_FNR_REAL", required = false) String fnr,
             @RequestParam(value = "MAINT_PRIX_REAL", required = false) Double prix,
             @RequestParam(value = "MAINT_MRAQUE_MARQUE", required = false) String marque,
-            @RequestParam(value = "MAINT_DATE_REAL", required = false) String dateReal,
+            @RequestParam(value = "MAINT_REFERENCE_PIECE", required = false) String reference,
+                        @RequestParam(value = "MAINT_DATE_REAL") String dateReal,
             @RequestPart(value = "file", required = false) MultipartFile file
     ) throws IOException {
 
@@ -459,18 +460,7 @@ public class MaintenanceController {
                 ? file.getBytes()
                 : null;
 
-        maintenanceService.validerEtapeReal(
-                sessionId,
-                maintCode,
-                intervReal,
-                action,
-                execution,
-                fnr,
-                prix,
-                marque,
-                dateReal,
-                contenu
-        );
+        maintenanceService.validerEtapeReal(sessionId,maintCode,intervReal,action,execution,fnr,prix,marque,dateReal,contenu,reference);
 
         return ResponseEntity.ok(
                 Collections.singletonMap("success", true)

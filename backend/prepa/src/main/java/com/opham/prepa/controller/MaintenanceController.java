@@ -539,6 +539,15 @@ public class MaintenanceController {
         return new ResponseEntity<>(temps, HttpStatus.OK);
     }
 
+    @GetMapping("/voitureMaint")
+    public ResponseEntity<List<Maintenance>> getVoitureMaintenance(@RequestHeader("Authorization") String sessionId , @RequestParam("VOIT_NUM") String VoitImmatrcl){
+        List<Maintenance> maintVoiture = mtnceRepo.getMtVT(sessionId,VoitImmatrcl);
+        if (maintVoiture.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(maintVoiture,HttpStatus.OK);
+    }
+
 
 }
 

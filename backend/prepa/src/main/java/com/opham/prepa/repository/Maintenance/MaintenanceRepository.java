@@ -151,5 +151,7 @@ public interface MaintenanceRepository {
 
   List<DeadLine> getDateButoir(String sessionId, String maintCode, String etapeLigne);
 
+  List<Maintenance> getMtVT(String sessionId, String VoitNum);
+
   /** DemandeMaint getDmdbyCode(String sessionId,String demandeCode); */
 }

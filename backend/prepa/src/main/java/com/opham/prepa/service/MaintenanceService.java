@@ -477,6 +477,15 @@ public class MaintenanceService implements MaintenanceRepository {
     }
 
 
+    @Override
+    public List<Maintenance> getMtVT(String sessionId , String VoitNum){
+        JdbcTemplate jUser = userSessionManager.getUserJdbcTemplate(sessionId);
+        String sqlGet = "{call MAINT_OPHAM..x_VoitMaintenance(?)}";
+        return jUser.query(sqlGet,new Object[]{VoitNum},new MaintenanceListMapper());
+
+    }
+
+
 
 
 

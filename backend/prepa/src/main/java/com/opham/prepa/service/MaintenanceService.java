@@ -485,6 +485,14 @@ public class MaintenanceService implements MaintenanceRepository {
 
     }
 
+    @Override
+    public List<EtapeEnCours> getEtapeMaint(String sessionId , String maintCode){
+        JdbcTemplate jUser = userSessionManager.getUserJdbcTemplate(sessionId);
+        String sqlGet = "{call MAINT_OPHAM..x_GetDemandeEtat(?)}";
+        return jUser.query(sqlGet,new Object[]{maintCode},new EtapeEnCoursMapper());
+
+    }
+
 
 
 

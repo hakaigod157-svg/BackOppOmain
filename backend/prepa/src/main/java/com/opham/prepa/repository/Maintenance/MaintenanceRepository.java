@@ -153,5 +153,7 @@ public interface MaintenanceRepository {
 
   List<Maintenance> getMtVT(String sessionId, String VoitNum);
 
+  List<EtapeEnCours> getEtapeMaint(String sessionId, String maintCode);
+
   /** DemandeMaint getDmdbyCode(String sessionId,String demandeCode); */
 }

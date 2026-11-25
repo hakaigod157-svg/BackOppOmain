@@ -152,6 +152,8 @@ public class MaintenanceController {
         maintenanceService.enregistrDmd(sessionId,demandeCode,demandeVoiture,demandeMarque,demandeType,demandeDescr,demandeKm);
         return ResponseEntity.ok().build();
     }
+
+
     @GetMapping("/allVoiture")
     public ResponseEntity<List<Voiture>> getVoiture(@RequestHeader("Authorization") String sessionId){
 
@@ -161,6 +163,8 @@ public class MaintenanceController {
         }
         return new ResponseEntity<>(voitrKm, HttpStatus.OK);
     }
+
+
     @GetMapping("/getVoitureTokana")
     public ResponseEntity<Voiture> getVoitureTokana(@RequestHeader("Authorization") String sessionId,@RequestParam("VOIT_NUM") String numVoiture){
 
@@ -229,6 +233,12 @@ public class MaintenanceController {
     @GetMapping("/etapeEnCours")
     public ResponseEntity<List<DemandeStatut>>getEtapeEnCours( @RequestHeader ("Authorization") String sessionId ,@RequestParam("DEMANDE_CODE") String demandeCode){
        List<DemandeStatut> farany = mtnceRepo.getDemandeStatus(sessionId,demandeCode);
+        return new ResponseEntity<>(farany, HttpStatus.OK);
+    }
+
+    @GetMapping("/etapeMaint")
+    public ResponseEntity<List<EtapeEnCours>>getEtapeMaint( @RequestHeader ("Authorization") String sessionId ,@RequestParam("MAINT_CODE") String maintCode){
+       List<EtapeEnCours> farany = mtnceRepo.getEtapeMaint(sessionId,maintCode);
         return new ResponseEntity<>(farany, HttpStatus.OK);
     }
 
@@ -408,10 +418,7 @@ public class MaintenanceController {
    */
 
 
-    @PostMapping(
-            value = "/validerEtapePrepa",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-    )
+    @PostMapping(value = "/validerEtapePrepa",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> validerEtapePrepa(
             @RequestHeader("Authorization") String sessionId,
             @RequestParam("MAINT_CODE_LIGNE") String maintCode,
@@ -423,7 +430,6 @@ public class MaintenanceController {
         byte[] contenu = file != null && !file.isEmpty()
                 ? file.getBytes()
                 : null;
-
         maintenanceService.validerEtapePrepa(
                 sessionId,
                 maintCode,
@@ -438,10 +444,7 @@ public class MaintenanceController {
     }
 
 
-    @PostMapping(
-            value = "/validerEtapeReal",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-    )
+    @PostMapping(value = "/validerEtapeReal",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> validerEtapeReal(
             @RequestHeader("Authorization") String sessionId,
             @RequestParam("MAINT_CODE_REAL") String maintCode,
@@ -452,7 +455,7 @@ public class MaintenanceController {
             @RequestParam(value = "MAINT_PRIX_REAL", required = false) Double prix,
             @RequestParam(value = "MAINT_MRAQUE_MARQUE", required = false) String marque,
             @RequestParam(value = "MAINT_REFERENCE_PIECE", required = false) String reference,
-                        @RequestParam(value = "MAINT_DATE_REAL") String dateReal,
+            @RequestParam(value = "MAINT_DATE_REAL") String dateReal,
             @RequestPart(value = "file", required = false) MultipartFile file
     ) throws IOException {
 
